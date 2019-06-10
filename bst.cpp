@@ -11,7 +11,7 @@ class BinarySearchTree {
         Node *right;
     };
     Node *head;
-    void add_(T value, Node *node) {
+    void add_(T value, Node *&node) {
         if (value > node->value)
         {
             if (node->right != 0)
@@ -97,12 +97,18 @@ int main()
     BinarySearchTree<int> tree;
     
     tree.add(1);
-    tree.add(2);
-    tree.add(3);
-    tree.add(4);
+    tree.add(19);
+    tree.add(7);
     tree.add(5);
-    tree.add(10);
-    tree.add(0);
+    tree.add(6);
+    tree.add(42);
+    tree.add(21);
+	tree.add(13);
+	tree.add(56);
+	tree.add(78);
+	tree.add(29);
+	tree.add(3);
+	tree.add(14);
     tree.print_bfs();
     cout << endl;
     tree.inorder();

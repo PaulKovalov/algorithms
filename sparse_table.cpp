@@ -22,17 +22,17 @@ template <class T> class SparseTable {
         // get height of the table
         int height = ceil(log(arr.size()) / log(2));
         // sparse table is of size height * arr.size()
-        sparse_table.resize(height);
+        sparse_table.resize(arr.size());
         for (size_t i = 0; i < sparse_table.size(); ++i) {
-            sparse_table[i].resize(arr.size(), 0);
+            sparse_table[i].resize(height, 0);
+            sparse_table[i][0] = arr[i];
         }
-        // obviously st[0] is the given array
-        sparse_table[0] = arr;
         int arr_s = arr.size();
         // building the table
-        for (int k = 1; k < height; ++k) {
-            for (int i = 0; i < arr_s - (1 << (k-1)); ++i) {
-                sparse_table[k][i] = min(sparse_table[k-1][i], sparse_table[k-1][i + pow(2, k-1)]); 
+        for (int j = 1; (1 << j) <= arr.size(); ++j) {
+            for (int i = 0;(i + (1 << j) - 1) < arr.size(); ++i) {
+                // sparse_table[k][i] = min(sparse_table[k-1][i], sparse_table[k-1][i + pow(2, k-1)]); 
+                sparse_table[i][j] = min(sparse_table[i][j - 1], sparse_table[i + (1 << (j- 1))][j - 1]);
             }
         }
     }
@@ -43,8 +43,8 @@ template <class T> class SparseTable {
         build_sparse_table(arr);
     }
     int query(int l, int r) {
-        int k = round(log(r - l + 1) / log(2));
-        return min(sparse_table[k][l], sparse_table[k][r - pow(2,k) + 1]);
+        int k = (int)log2(r - l + 1);
+        return min(sparse_table[l][k], sparse_table[r - (1 << k) + 1][k]);
     }
 };
 

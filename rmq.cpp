@@ -18,8 +18,8 @@ class RMQ {
         vector<int> first, euler_tour, heights;
         struct Node {
             Node *left, *right, *parent;
-            int key, priority;
-            Node(int k, int pr, Node *l, Node *r, Node *p = 0) {
+            long long key, priority;
+            Node(long k, long pr, Node *l, Node *r, Node *p = 0) {
                 left = l;
                 right = r;
                 key = k;
@@ -49,7 +49,7 @@ class RMQ {
         
      public:
         
-         void build_tree(const vector<int> &v) {
+         void build_tree(const vector<long long> &v) {
             Node *last = new Node(0,v[0] ,nullptr, nullptr);
             for (size_t i = 1; i < v.size(); i++) {
                 Node *new_node = new Node(i,v[i],nullptr, nullptr);
@@ -114,7 +114,8 @@ class RMQ {
     
 
     vector<vector<vector<int> > > blocks;
-    vector<int> block_masks, euler_tour, first, heights, block_mins,initial_array;
+    vector<int> block_masks, euler_tour, first, heights, block_mins;
+    vector<long long> initial_array;
     int BLOCK_SIZE;
     int BLOCKS_AMOUNT;
     
@@ -150,11 +151,11 @@ class RMQ {
                 curr_bit = (v[k*BLOCK_SIZE + i-1] - first_el) < (v[k*BLOCK_SIZE + i] - first_el)? 1:0; 
                 // compute bitmask value for each block
                 block_mask += curr_bit*(1 << (i - 1));
-                cout << "BLOCK # " << k <<" ID " << block_mask << endl;
+                cout << "BLOCK # " << k <<" ID " << block_mask << "block min " << block_mins[k] << endl;
                 block_masks[k] = block_mask;
             }
         }
-        blocks.resize(sqrt(v.size()));
+        blocks.resize(0.5*sqrt(v.size()));
         size_t es = euler_tour.size();
         for (int i = 0; i < BLOCKS_AMOUNT; ++i) {
             int mask = block_masks[i];
@@ -181,7 +182,7 @@ class RMQ {
     }
     
  public:
-    RMQ(vector<int> v){
+    RMQ(vector<long long int> v){
         initial_array = v;
         Tree tree(v.size());
         tree.build_tree(v);
@@ -204,7 +205,7 @@ class RMQ {
         cout << "BLOCKS AMOUNT: " << BLOCKS_AMOUNT << endl;
         build_blocks(heights);
     }
-    int query(int ll, int rr) {
+    long long query(int ll, int rr) {
         
         int l, r;
         cout << "Firsts: " << endl;
@@ -218,7 +219,7 @@ class RMQ {
         cout << "Left block: " << left_block << endl;
         cout << "Right block: " << right_block << endl;
         if (left_block == right_block) {
-            return euler_tour.at(blocks[block_masks[left_block]][l%BLOCK_SIZE][r%BLOCK_SIZE] + left_block * BLOCK_SIZE);
+            return initial_array[euler_tour.at(blocks[block_masks[left_block]][l%BLOCK_SIZE][r%BLOCK_SIZE] + left_block * BLOCK_SIZE)];
         }
         int ans1 = blocks.at(block_masks.at(left_block)).at(l%BLOCK_SIZE).at(BLOCK_SIZE - 1) + left_block * BLOCK_SIZE;
         int ans2 = blocks.at(block_masks.at(right_block)).at(0).at(r%BLOCK_SIZE) + right_block * BLOCK_SIZE;
@@ -229,7 +230,7 @@ class RMQ {
             cout << "Sparse table answer: " << ans3 << endl;
             ans = min_by_height(ans, ans3);
         }
-        cout << "ANSWER: " << endl;
+        cout << "ANSWER: " << euler_tour.at(ans) << endl;
         cout << initial_array[euler_tour.at(ans)] << endl;
         return initial_array[euler_tour.at(ans)];
         // return 0;
@@ -240,7 +241,7 @@ int main() {
 
     int n;
     cin >> n;
-    vector<int> v(n);
+    vector<long long int> v(n);
     for (int i = 0; i < n; ++i) {
         cin >> v[i];
     }

@@ -4,39 +4,33 @@
 
 using namespace std;
 template <class T>
-class Treap
-{
-    struct Node
-    {
+class Treap {
+    struct Node {
         T key;
         int priority;
         Node *left, *right;
         Node(T k, int p) : key(k), priority(p), left(nullptr), right(nullptr) {}
     };
     // Node *n will be a new treap
-    void merge(Node *n, Node *left, Node *right)
-    {
-        if (left == nullptr || right == nullptr)
-        {
+    void merge(Node *&n, Node *left, Node *right) {
+        if (left == nullptr || right == nullptr) {
             n = left ? left : right;
         }
-        if (right->priority > left->priority)
-        {
-            n = right;
-            merge(n->left, left, right->left);
-        }
-        else
-        {
-            n = left;
-            merge(n->right, left->right, right);
+        else {
+            if (left->priority > right->priority) {
+                n = left;
+                merge(n->right, left->right, right);
+            }
+            else {
+                n = right;
+                merge(n->left, left, right->left);
+            }
         }
     }
-    void split(Node *root, T key, Node *&l, Node *&r)
-    {
+    void split(Node *root, T key, Node *&l, Node *&r) {
         if (!root)
             l = r = NULL;
-        else if (root->key > key)
-        {
+        else if (root->key > key) {
             r = root;
             split(root->left, key, l, root->left);
         }
@@ -51,7 +45,7 @@ class Treap
         if (!root)
             return node;
         if (node->priority > root->priority)
-        {
+        {   
             split(root, node->key, node->left, node->right);
             return node;
         }
@@ -68,7 +62,29 @@ class Treap
             return root;
         }
     }
-    
+    void erase(Node *&n, T value)
+    {
+        if (n == nullptr)
+        {
+            return;
+        }
+        if (n->key == value)
+        {
+            merge(n, n->left, n->right);
+        }
+        else
+        {
+
+            if (n->key > value)
+            {
+                erase(n->left, value);
+            }
+            else
+            {
+                erase(n->right, value);
+            }
+        }
+    }
     Node *head;
 
   public:
@@ -82,7 +98,12 @@ class Treap
         Node *n = new Node(value, rand() % 1000);
         head = insert(head, n);
     }
-    void print() {
+    void erase(T value)
+    {
+        erase(head, value);
+    }
+    void print()
+    {
         queue<Node *> qn;
         qn.push(head);
         while (!qn.empty())
@@ -106,9 +127,20 @@ int main()
 {
 
     Treap<int> treap;
+
+    cout << "Adding 5 numbers" << endl;
+
     treap.add(5);
+    treap.add(8);
     treap.add(10);
     treap.add(11);
+    treap.add(15);
+
     treap.print();
+    cout << endl;
+    cout << "Erasing 10" << endl;
+    treap.erase(10);
+    treap.print();
+    cout << endl;
     return 0;
 }

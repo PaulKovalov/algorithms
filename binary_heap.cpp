@@ -1,7 +1,12 @@
 #include <iostream>
-#include <vector>
+#include <queue>
 
 using namespace std;
+
+/**
+ * Array based implementation of the binary heap
+ * */
+
 template <class T>
 class BinHeap {
     vector<T> v;
