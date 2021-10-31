@@ -1,7 +1,3 @@
-/**
- * Copyright 2019. Author Paul Kovalov
- * */
-
 #include <iostream>
 #include <vector>
 #include <algorithm>

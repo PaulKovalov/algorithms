@@ -1,6 +1,3 @@
-/**
- * Copyright 2019. Author Paul Kovalov
- * */
 #include <iostream>
 
 using std::cin;
